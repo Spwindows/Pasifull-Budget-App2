@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compact Weekly Budget</title>
+<style>
+body{font-family:Arial;background:#0f172a;color:white;margin:0;padding:20px}
+.card{background:#1e293b;padding:16px;border-radius:12px;margin-bottom:12px}
+.big{font-size:32px;font-weight:bold}
+input,button,select{width:100%;padding:10px;margin-top:6px;border-radius:8px;border:none}
+button{background:#38bdf8;color:white;font-weight:bold}
+</style>
+</head>
+<body>
+
+<div class="card">
+<h2>Available Now</h2>
+<div id="available" class="big">$0</div>
+</div>
+
+<div class="card">
+<h3>Add Spend</h3>
+<input id="name" placeholder="Item">
+<input id="amount" type="number" placeholder="Amount">
+<button onclick="addSpend()">Add Spend</button>
+</div>
+
+<div class="card">
+<h3>This Week Spent</h3>
+<div id="spent">$0</div>
+</div>
+
+<script>
+let data=JSON.parse(localStorage.getItem("budget")||'{"spends":[]}')
+
+function addSpend(){
+let name=document.getElementById("name").value
+let amount=Number(document.getElementById("amount").value||0)
+if(!amount)return
+data.spends.push({name,amount})
+localStorage.setItem("budget",JSON.stringify(data))
+calc()
+}
+
+function calc(){
+let spent=data.spends.reduce((a,b)=>a+b.amount,0)
+document.getElementById("spent").innerText="$"+spent.toFixed(2)
+document.getElementById("available").innerText="$"+(1000-spent).toFixed(2)
+}
+
+calc()
+</script>
+
+</body>
+</html>
